@@ -38,8 +38,20 @@ def extract_names(filename):
     ['2006', 'Aaliyah 91', Aaron 57', 'Abagail 895', ' ...]
     """
     # +++your code here+++
-    re_year = r'Popularity\sin\s(\d\d\d\d)'
-    return re_year
+    # used to print out the match_year
+    info = ""
+    re_find_year = r"Popularity\sin\s[0-9][0-9][0-9][0-9]"
+    re_year = r"[0-9][0-9][0-9][0-9]"
+    pattern_year = re.compile(re_year, re.IGNORECASE)
+
+    match_year = re.findall(re_find_year, filename, re.IGNORECASE)
+    match_year = match_year[0]
+    year = pattern_year.search(match_year)
+    year=year.group(1)
+    # used to print out the male and female name
+    re_names = r"<td>(\d+)<\/td><td>(\w+)<\/td>\<td>(\w+)<\/td>"
+
+    return year
 
 
 def main():
