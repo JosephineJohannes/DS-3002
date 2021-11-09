@@ -33,7 +33,7 @@ if exists('spotify_taylorswift.csv'):
     # 3. # Converted file should be written to disk, or pushed to S3, or written to a SQL database
     data_json = mod_data.to_json('./taylorswift.json', orient='index')
     print("File converted from CSV to JSON")
-    
+
     # BONUS: Use an API to pull information realtime
     '''
     s3 = boto3.resource('s3')

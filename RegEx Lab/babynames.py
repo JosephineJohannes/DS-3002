@@ -39,19 +39,33 @@ def extract_names(filename):
     """
     # +++your code here+++
     # used to print out the match_year
-    info = ""
-    re_find_year = r"Popularity\sin\s[0-9][0-9][0-9][0-9]"
-    re_year = r"[0-9][0-9][0-9][0-9]"
-    pattern_year = re.compile(re_year, re.IGNORECASE)
+    names = []
 
-    match_year = re.findall(re_find_year, filename, re.IGNORECASE)
-    match_year = match_year[0]
-    year = pattern_year.search(match_year)
-    year=year.group(1)
-    # used to print out the male and female name
-    re_names = r"<td>(\d+)<\/td><td>(\w+)<\/td>\<td>(\w+)<\/td>"
+    f = open(filename, 'rU')
+    text = f.read()
 
-    return year
+    re_find_year = r"Popularity\sin\s(\d\d\d\d)"
+    match_year = re.search(re_find_year, text, re.IGNORECASE)
+    if not match_year:
+        sys.stderr.write('Could not find a year')
+        sys.exit(1)
+    pattern_year = match_year.group(1)
+    names.append(pattern_year)
+
+    re_names = r'<td>(\d+)<\/td><td>(\w+)<\/td>\<td>(\w+)<\/td>'
+    pattern_names = re.compile(re_names, re.IGNORECASE)
+    match_patterns = pattern_names.findall(text)
+    rank_and_names = {}
+    for mt in match_patterns:
+        (rank, bname, gname) = mt
+        if bname not in rank_and_names:
+            rank_and_names[bname] = rank
+        if gname not in rank_and_names:
+            rank_and_names[gname] = rank
+    sorted_names = sorted(rank_and_names.keys())
+    for name in sorted_names:
+        names.append(name + " " + rank_and_names[name])
+    return names
 
 
 def main():
@@ -59,7 +73,7 @@ def main():
     # Make a list of command line arguments, omitting the [0] element
     # which is the script itself.
     args = sys.argv[1:]
-
+    print(str(args))
     if not args:
         print('usage: [--summaryfile] file [file ...]')
         sys.exit(1)
@@ -73,11 +87,17 @@ def main():
     # +++your code here+++
     # For each filename, get the names, then either print the text output
     # or write it to a summary file
+    for filename in args:
+        names = extract_names(filename)
+        text = '\n'.join(names)
+
+        if summary:
+            outf = open(filename + '.summary', 'w')
+            outf.write(text + '\n')
+            outf.close()
+        else:
+            print(text)
 
 
 if __name__ == '__main__':
-    with open('baby1990.html', 'r') as f:
-        content=f.read()
-    baby = extract_names(content)
-    print(baby)
     main()
