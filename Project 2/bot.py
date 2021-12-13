@@ -1,12 +1,16 @@
 # download module
 import discord
 import requests
-import os
+from os import getenv
 import time
+from dotenv import load_dotenv
+# you might need to install python-dotenv
 
 from discord.ext import commands
 
 # This command is important because it is the bot
+load_dotenv()
+token = getenv("TOKEN")
 client = commands.Bot(command_prefix='.')
 
 @client.event
@@ -114,4 +118,4 @@ async def summary_func(ctx):
     await ctx.send(done)
 
 # This statement allows the bot to run the commands using its token
-client.run('OTE5MDI5MTc4OTQ1Mzc2MzE2.YbP2ng.Ezk2XxnL3S9fpMwFZMjkk1gMphY')
+client.run(token)
